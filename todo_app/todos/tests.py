@@ -29,6 +29,14 @@ class TaskApiTests(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
+    def test_list_tasks(self):
+        Task.objects.create(user=self.user, title='Task 1')
+        Task.objects.create(user=self.user, title='Task 2')
+
+        response = self.client.get('/api/tasks/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 2)
+        
     def test_delete_task(self):
         task = Task.objects.create(user=self.user, title='Task to delete')
         response = self.client.delete(f'/api/tasks/{task.id}/', format='json')
